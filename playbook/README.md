@@ -1,0 +1,1 @@
+Команда для запуска: sudo ansible-playbook main.yml

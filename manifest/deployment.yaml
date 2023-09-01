@@ -1,0 +1,65 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: test-python-app
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: test-python-app
+  namespace: test-python-app
+  labels:
+    app: test-python-app
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: test-python-app
+  template:
+    metadata:
+      labels:
+        app: test-python-app
+        image: test-python-app-image
+    spec:
+      containers:
+      - name: test-python-app
+        image: test-python-app-image
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8000
+        readinessProbe:
+            httpGet:
+              scheme: HTTP
+              path: /readiness
+              port: 8000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+        livenessProbe:
+            httpGet:
+              scheme: HTTP
+              path: /liveness
+              port: 8000
+            initialDelaySeconds: 10
+            periodSeconds: 15
+        env:
+        - name: UUID
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.uid
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: test-python-app
+  namespace: test-python-app
+  labels:
+    app: test-python-app
+spec:
+  type: CluserID
+  ports:
+  - port: 8000
+  selector:
+    app: test-python-app

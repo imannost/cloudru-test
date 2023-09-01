@@ -1,0 +1,17 @@
+# Default values for test-python-app.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+author: "imannost"
+
+replicaCount: 3
+
+image:
+  repository: test-python-app-image
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: "latest"
+
+service:
+  type: ClusterIP
+  port: 8000
